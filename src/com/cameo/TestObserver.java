@@ -12,20 +12,34 @@ public class TestObserver {
         EggAlert eggMonitor = new EggAlert();
         EggCounter eggCounts = new EggCounter();
 
+        //Chicken instances created
+        //eggCounts and eggMonitor observers added to each Chicken
         Chicken a = new Chicken("Mavis");
-        //adds observers to chicken a
-        a.addObserver(eggMonitor);
+        //add each observer to chicken a
         a.addObserver(eggCounts);
+        a.addObserver(eggMonitor);
 
         Chicken b = new Chicken("Betty");
-        //adds observers to chicken b
-        b.addObserver(eggMonitor);
         b.addObserver(eggCounts);
+        b.addObserver(eggMonitor);
 
+        Chicken c = new Chicken("Erma");
+        c.addObserver(eggCounts);
+        c.addObserver(eggMonitor);
+
+        Chicken d = new Chicken("Viola");
+        d.addObserver(eggCounts);
+        d.addObserver(eggMonitor);
+
+        //when layEgg() method is called, it changes laidEgg variable of each Chicken object to true
         a.layEgg();
         b.layEgg();
         a.layEgg();
-        //TODO fix the order in which EggAlert and EggCounter display
+        c.layEgg();
+        d.layEgg();
+        d.layEgg();
+        a.layEgg();
+        c.layEgg();
     }
 }
 
@@ -40,12 +54,15 @@ class Chicken extends Observable {
 
     public void layEgg(){
         this.laidEgg = true;
-        //method of Observable interface, returns true if class changes,
-        // in this case, the layEgg() method is called
+
+        //method of Observable interface, marks Chicken as having been changed
         this.setChanged();
+
         //method of Observable interface, notifies set of Observers of change,
         // in this case EggMonitor and EggCounts
         this.notifyObservers();
+
+        //variable changed back to state prior to change
         this.laidEgg = false;
     }
 
@@ -63,7 +80,7 @@ class EggAlert implements Observer {
     //update method is called whenever chicken has changed
     public void update(Observable chicken, Object arg) {
         if (((Chicken)chicken).laidEgg() ){
-            System.out.println(chicken + " has laid an egg \n");
+            System.out.println("\n" + chicken + " has laid an egg");
         }
     }
 }
@@ -80,7 +97,7 @@ class EggCounter implements Observer{
                 Integer numEggs = listOfChickenAndNumOfEggs.get(chicken);
                 numEggs++;
                 listOfChickenAndNumOfEggs.put((Chicken) chicken, numEggs);
-            } else { //chicken has layed her first egg, add chicken and 1 egg to list
+            } else { //chicken has laid her first egg, add chicken and egg count of 1 to list
                 listOfChickenAndNumOfEggs.put((Chicken) chicken, 1);
             }
         }
